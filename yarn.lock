@@ -562,10 +562,17 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@orbs-network/ton-access@^2.2.2", "@orbs-network/ton-access@^2.3.0":
+"@orbs-network/ton-access@^2.2.2":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@orbs-network/ton-access/-/ton-access-2.3.0.tgz#985a87bb84bfade8866938b6f2afb7552d03b3e0"
   integrity sha512-2LWA1Kn7W0ZOOBlZYfdu26y/NrEzOf3HGDQRjMTnsagpe0RR1Hb7M8+fc/y3/fH2BjVaSwXP6heb7YQ/37KvYw==
+  dependencies:
+    isomorphic-fetch "^3.0.0"
+
+"@orbs-network/ton-access@^2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@orbs-network/ton-access/-/ton-access-2.3.3.tgz#20292f83b52a75f451f185821180a7d9b829bcd3"
+  integrity sha512-b1miCPts7wBG9JKYgzXIRZQm/LMy5Uk1mNK8NzlcXHL3HRHJkkFbuYJGuj3IkWCiIicW3Ipp4sYnn3Fwo4oB0g==
   dependencies:
     isomorphic-fetch "^3.0.0"
 
