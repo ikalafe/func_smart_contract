@@ -1,4 +1,4 @@
-import { Cell, contractAddress } from "ton-core";
+import { Address, Cell, contractAddress } from "ton-core";
 import { hex } from "../build/main.compiled.json";
 import { getHttpV4Endpoint } from "@orbs-network/ton-access";
 import { TonClient4 } from "ton";
@@ -38,6 +38,39 @@ async function onchainTestScript() {
   qrcode.generate(link, { small: true }, (code) => {
     console.log(code);
   });
+
+  let recent_sender_archive: Address;
+
+  setInterval(async () => {
+    const latestBlock = await client4.getLastBlock();
+    const { exitCode, result } = await client4.runMethod(
+      latestBlock.last.seqno,
+      address,
+      "get_the_latest_sender"
+    );
+
+    if (exitCode !== 0) {
+      console.log("Running geter method failed");
+      return;
+    }
+    if (result[0].type !== "slice") {
+      console.log("Unknow result type");
+      return;
+    }
+
+    let most_recent_sender = result[0].cell.beginParse().loadAddress();
+
+    if (
+      most_recent_sender &&
+      most_recent_sender.toString() !== recent_sender_archive?.toString()
+    ) {
+      console.log(
+        "New recent sender found: " +
+          most_recent_sender.toString({ testOnly: true })
+      );
+      recent_sender_archive = most_recent_sender;
+    }
+  }, 2000);
 }
 
 onchainTestScript();
