@@ -8,12 +8,13 @@
   int op = in_msg_body~load_uint(32);
 
   if(op == 1) {
+    int inc_by = in_msg_body~load_uint(32);
 
     slice ds = get_data().begin_parse();
     int counter_value = ds~load_uint(32);
 
     set_data(
-      begin_cell().store_uint(counter_value + 1, 32).store_slice(sender_address).end_cell()
+      begin_cell().store_uint(counter_value + inc_by, 32).store_slice(sender_address).end_cell()
     );
   }
 }
