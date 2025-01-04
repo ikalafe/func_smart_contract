@@ -42,7 +42,7 @@ async function deployScript() {
   console.log(`Please Scan the QRCode below to to deploy the contract to ${process.env.TESTNET ? "testnet" : "mainnet"}:`);
 
   let link =
-    `https://${process.env.TESTNET ? "test." : ""}.tonhub.com/transfer/` +
+    `https://${process.env.TESTNET ? "test." : ""}tonhub.com/transfer/` +
     address.toString({
       testOnly: process.env.TESTNET ? true : false,
     }) +
