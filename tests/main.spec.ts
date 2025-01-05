@@ -1,26 +1,39 @@
 import { Cell, toNano } from "ton-core";
 import { hex } from "../build/main.compiled.json";
-import { Blockchain } from "@ton-community/sandbox";
+import {
+  Blockchain,
+  SandboxContract,
+  TreasuryContract,
+} from "@ton-community/sandbox";
 import { MainContract } from "../wrappers/MainContract";
 import "@ton-community/test-utils";
 
 describe("main.fc contract tests", () => {
-  it("should successfully increase counter in contract and get the proper most recent sender addr", async () => {
-    const blockchain = await Blockchain.create();
+  let blockchain: Blockchain;
+  let myContract: SandboxContract<MainContract>;
+  let initWalletAddress: SandboxContract<TreasuryContract>;
+  let ownerWalletAddress: SandboxContract<TreasuryContract>;
+
+  beforeEach(async () => {
+    blockchain = await Blockchain.create();
+    initWalletAddress = await blockchain.treasury("initWalletAddress");
+    ownerWalletAddress = await blockchain.treasury("ownerWalletAddress");
+
     const codeCell = Cell.fromBoc(Buffer.from(hex, "hex"))[0];
 
-    const initAddress = await blockchain.treasury("initAddress");
-
-    const myContract = blockchain.openContract(
+    myContract = blockchain.openContract(
       await MainContract.createFromConfig(
         {
           number: 0,
-          address: initAddress.address,
+          address: initWalletAddress.address,
+          owner_addr: ownerWalletAddress.address,
         },
         codeCell
       )
     );
+  });
 
+  it("should successfully increase counter in contract and get the proper most recent sender addr", async () => {
     const senderWallet = await blockchain.treasury("sender");
 
     const sentMessageResult = await myContract.sendIncrementComment(
