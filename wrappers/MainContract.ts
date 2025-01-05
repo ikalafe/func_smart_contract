@@ -58,6 +58,49 @@ export class MainContract implements Contract {
       body: msg_body,
     });
   }
+
+  async sendDeposit(provider: ContractProvider, sender: Sender, value: bigint) {
+    const msg_body = beginCell().storeUint(2, 32).endCell();
+
+    await provider.internal(sender, {
+      value,
+      sendMode: SendMode.PAY_GAS_SEPARATELY,
+      body: msg_body,
+    });
+  }
+
+  async sendNoCodeDeposit(
+    provider: ContractProvider,
+    sender: Sender,
+    value: bigint
+  ) {
+    const msg_body = beginCell().endCell();
+
+    await provider.internal(sender, {
+      value,
+      sendMode: SendMode.PAY_GAS_SEPARATELY,
+      body: msg_body,
+    });
+  }
+
+  async sendWithdrawalReq(
+    provider: ContractProvider,
+    sender: Sender,
+    value: bigint,
+    amount: bigint
+  ) {
+    const msg_body = beginCell()
+      .storeUint(3, 32) // OP Code
+      .storeCoins(amount)
+      .endCell();
+
+    await provider.internal(sender, {
+      value,
+      sendMode: SendMode.PAY_GAS_SEPARATELY,
+      body: msg_body,
+    });
+  }
+
   async getData(provider: ContractProvider) {
     const { stack } = await provider.get("get_contract_storage", []);
 
