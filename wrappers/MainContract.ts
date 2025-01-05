@@ -12,12 +12,14 @@ import {
 export type MainContractConfig = {
   number: number;
   address: Address;
+  owner_addr: Address;
 };
 
 export function mainContractConfigCell(config: MainContractConfig): Cell {
   return beginCell()
     .storeUint(config.number, 32)
     .storeAddress(config.address)
+    .storeAddress(config.owner_addr)
     .endCell();
 }
 
@@ -58,9 +60,18 @@ export class MainContract implements Contract {
   }
   async getData(provider: ContractProvider) {
     const { stack } = await provider.get("get_contract_storage", []);
+
     return {
       number: stack.readNumber(),
       recent_sender: stack.readAddress(),
+      owner_addr: stack.readAddress(),
+    };
+  }
+
+  async getCurrentBalance(provider: ContractProvider) {
+    const { stack } = await provider.get("current_balance", []);
+    return {
+      balance: stack.readNumber(),
     };
   }
 }
